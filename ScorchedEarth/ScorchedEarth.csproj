@@ -87,6 +87,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Custom Assets\Scripts\PlasmaProjectile.cs" />
     <Compile Include="Assets\Custom Assets\Scripts\PlayerCannonController.cs" />
     <Compile Include="Assets\Custom Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Custom Assets\Scripts\TextFlasher.cs" />

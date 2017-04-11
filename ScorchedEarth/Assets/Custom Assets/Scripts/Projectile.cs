@@ -4,19 +4,19 @@ using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour {
 
-    public float DamageMinimum { get; set; }
-    public float DamageMaximum { get; set; }
-    public float Speed { get; set; }
-    public float MaxDistance { get; set; }
-    public double MaxFlightTime { get; set; }
-    public float ExplosionRadius { get; set; }
-    public GameObject ExplosionObject { get; set; }
-    public ParticleSystem ExplosionParticles { get; set; }
-    public bool SplitsProjectileOnCollision { get; set; }
-    public GameObject SplitProjectile { get; set; }
-    public AudioClip FireSoundEffect { get; set; }
-    public AudioClip ExplosionSoundEffect { get; set; }
-    public AudioClip FlightSoundEffect { get; set; }
+    public float DamageMinimum;
+    public float DamageMaximum;
+    public float Speed;
+    public float MaxDistance;
+    public double MaxFlightTime;
+    public float ExplosionRadius;
+    public GameObject ExplosionObject;
+    public ParticleSystem ExplosionParticles;
+    public bool SplitsProjectileOnCollision;
+    public GameObject SplitProjectile;
+    public AudioClip FireSoundEffect;
+    public AudioClip ExplosionSoundEffect;
+    public AudioClip FlightSoundEffect;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +28,7 @@ public abstract class Projectile : MonoBehaviour {
 		
 	}
 
-    public abstract void Detonate();
-
+    public abstract void Detonate(); //this may be replaced later with a virtual which just creates the explosion object and calls the sound effects, etc...
+                                     //sincei t probably doesn't need to be different for most projectiles
     public abstract void OnCollisionEnter(Collider c);
 }
