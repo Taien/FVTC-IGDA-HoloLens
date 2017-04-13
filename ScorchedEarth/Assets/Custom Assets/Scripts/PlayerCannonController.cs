@@ -9,6 +9,7 @@ public class PlayerCannonController : MonoBehaviour {
     private Transform canvasTrans;
     private GameObject cameraObject;
     private Transform camTrans;
+    private Transform cannonBarrelTrans;
     private bool isPlaced = false;
 
 	// Use this for initialization
@@ -17,6 +18,17 @@ public class PlayerCannonController : MonoBehaviour {
         menuCanvas = GameObject.FindGameObjectWithTag("MenuCanvas");
         canvasTrans = menuCanvas.GetComponent<Transform>();
         camTrans = cameraObject.GetComponent<Transform>();
+        //find transform for cannon barrel, as this will determine shot direction
+        Transform[] result = GetComponentsInChildren<Transform>();
+        for (int i = 0; i < result.Length; i++)
+        {
+            if (result[i].tag.Equals("CannonBarrel"))
+            {
+                cannonBarrelTrans = result[i];
+                break;
+            }
+        }
+        
         menuCanvas.SetActive(false);
 	}
 	
@@ -45,6 +57,11 @@ public class PlayerCannonController : MonoBehaviour {
     public void FireShot()
     {
         //fire projectile here
-        print("Shot fired");
+        if (ProjectileObject != null)
+        {
+            GameObject spawnedProjectile = Instantiate(ProjectileObject, GetComponent<Transform>().position + cannonBarrelTrans.up * 2f, Quaternion.identity);
+            Rigidbody projBody = spawnedProjectile.GetComponent<Rigidbody>();
+            projBody.AddForce(cannonBarrelTrans.up * ProjectileObject.GetComponent<Projectile>().Speed);
+        }
     }
 }
