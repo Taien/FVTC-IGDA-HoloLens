@@ -12,7 +12,7 @@ public class PlasmaProjectile : Projectile {
     {
     }
 
-    public void OnCollisionEnter(Collision c)
+    public override void OnCollisionEnter(Collision c)
     {
     }
 
