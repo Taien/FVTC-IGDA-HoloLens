@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerCannonController : MonoBehaviour {
 
     public GameObject ProjectileObject;
+    public GameObject CannonBarrelObject;
     //relevant objects
     private GameObject menuCanvas;
     private Transform canvasTrans;
@@ -15,14 +16,11 @@ public class PlayerCannonController : MonoBehaviour {
     private Transform cannonAxisTrans;
     //track inputs for updating
     private InputField xInput;
-    private InputField yInput;
     private InputField zInput;
     //bools
     private bool isPlaced = false;
     private bool increasingX = false;
     private bool decreasingX = false;
-    private bool increasingY = false;
-    private bool decreasingY = false;
     private bool increasingZ = false;
     private bool decreasingZ = false;
 
@@ -33,23 +31,27 @@ public class PlayerCannonController : MonoBehaviour {
         canvasTrans = menuCanvas.GetComponent<Transform>();
         camTrans = cameraObject.GetComponent<Transform>();
         xInput = GameObject.FindGameObjectWithTag("X Field").GetComponent<InputField>();
-        yInput = GameObject.FindGameObjectWithTag("Y Field").GetComponent<InputField>();
         zInput = GameObject.FindGameObjectWithTag("Z Field").GetComponent<InputField>();
-        //find transform for cannon barrel, as this will determine shot direction
-        Transform[] result = GetComponentsInChildren<Transform>();
-        for (int i = 0; i < result.Length; i++)
-        {
-            if (result[i].tag.Equals("CannonBarrel"))
-            {
-                cannonBarrelTrans = result[i];
-            }
-            else if (result[i].tag.Equals("CannonAxis"))
-            {
-                cannonAxisTrans = result[i];
-            }
-        }
         
         menuCanvas.SetActive(false);
+
+        //spawn cannon barrel
+        if (CannonBarrelObject != null)
+        {
+            Vector3 axisPosition = new Vector3();
+            foreach (Transform t in GetComponentsInChildren<Transform>()) if (t.tag.Equals("CannonAxisPosition")) axisPosition = t.position; 
+            GameObject barrel = Instantiate(CannonBarrelObject, axisPosition, Quaternion.identity);
+            foreach (Transform t in barrel.GetComponentInChildren<Transform>())
+            {
+                //find transform for cannon barrel, as this will determine shot direction
+                if (t.tag.Equals("CannonBarrel"))
+                {
+                    cannonBarrelTrans = t;
+                    print("CannonBarrelTrans set");
+                }
+            }
+            cannonAxisTrans = barrel.GetComponent<Transform>();
+        }
 	}
 	
 	// Update is called once per frame
@@ -71,23 +73,18 @@ public class PlayerCannonController : MonoBehaviour {
         //adjust canvas to look in the correct direction (needs adjustment still)
         canvasTrans.rotation = Quaternion.LookRotation(canvasTrans.position - camTrans.position);
         //update rotation based on user input
-        if (increasingX && (cannonAxisTrans.localRotation.eulerAngles.x < 90 || cannonAxisTrans.localRotation.eulerAngles.x >= 270))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(0.25f, 0, 0);
-        if (decreasingX && (cannonAxisTrans.localRotation.eulerAngles.x > 270 || cannonAxisTrans.localRotation.eulerAngles.x <= 90))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(-0.25f, 0, 0);
-        if (increasingY && (cannonAxisTrans.localRotation.eulerAngles.y < 90 || cannonAxisTrans.localRotation.eulerAngles.y >= 270))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(0, 0.25f, 0);
-        if (decreasingY && (cannonAxisTrans.localRotation.eulerAngles.y > 270 || cannonAxisTrans.localRotation.eulerAngles.y <= 90))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(0, -0.25f, 0);
-        if (increasingZ && (cannonAxisTrans.localRotation.eulerAngles.z < 90 || cannonAxisTrans.localRotation.eulerAngles.z >= 270))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(0, 0, 0.25f);
-        if (decreasingZ && (cannonAxisTrans.localRotation.eulerAngles.z > 270 || cannonAxisTrans.localRotation.eulerAngles.z <= 90))
-            cannonAxisTrans.localRotation = cannonAxisTrans.localRotation * Quaternion.Euler(0, 0, -0.25f);
+        if (increasingX)
+            cannonAxisTrans.rotation = cannonAxisTrans.rotation * Quaternion.AngleAxis(0.25f, Vector3.right);
+        if (decreasingX)
+            cannonAxisTrans.rotation = cannonAxisTrans.rotation * Quaternion.AngleAxis(-0.25f, Vector3.right);
+        if (increasingZ)
+            cannonAxisTrans.rotation = cannonAxisTrans.rotation * Quaternion.AngleAxis(0.25f,Vector3.forward);
+        if (decreasingZ)
+            cannonAxisTrans.rotation = cannonAxisTrans.rotation * Quaternion.AngleAxis(-0.25f, Vector3.forward);
 
         //update UI
-        xInput.text = cannonBarrelTrans.localRotation.eulerAngles.x.ToString("0.00");
-        yInput.text = cannonBarrelTrans.localRotation.eulerAngles.y.ToString("0.00");
-        zInput.text = cannonBarrelTrans.localRotation.eulerAngles.z.ToString("0.00");
+        xInput.text = cannonBarrelTrans.rotation.eulerAngles.x.ToString("0.00");
+        zInput.text = cannonBarrelTrans.rotation.eulerAngles.z.ToString("0.00");
     }
 
     public void FireShot()
@@ -120,27 +117,7 @@ public class PlayerCannonController : MonoBehaviour {
     {
         decreasingX = false;
     }
-
-    public void StartIncreaseY() //comes from cannon UI
-    {
-        increasingY = true;
-    }
-
-    public void EndIncreaseY() //comes from cannon UI
-    {
-        increasingY = false;
-    }
-
-    public void StartDecreaseY() //comes from cannon UI
-    {
-        decreasingY = true;
-    }
-
-    public void EndDecreaseY() //comes from cannon UI
-    {
-        decreasingY = false;
-    }
-
+    
     public void StartIncreaseZ() //comes from cannon UI
     {
         increasingZ = true;
