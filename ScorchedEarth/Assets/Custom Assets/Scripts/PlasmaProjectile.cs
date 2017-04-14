@@ -21,7 +21,7 @@ public class PlasmaProjectile : Projectile {
 
             //then spawn explosion
             Instantiate(ExplosionObject, tObject.position, Quaternion.Euler((float)rng.NextDouble() * 360f, (float)rng.NextDouble() * 360f, (float)rng.NextDouble() * 360f));
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 

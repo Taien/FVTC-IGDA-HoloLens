@@ -28,7 +28,7 @@ public class Explosion : MonoBehaviour {
         fullColor.a = 1 - (float)(timeElapsed / TimeToFullSize);
         if (timeElapsed > TimeToFullSize)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 	}
 }

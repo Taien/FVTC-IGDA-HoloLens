@@ -29,6 +29,6 @@ public abstract class Projectile : MonoBehaviour {
 	}
 
     public abstract void Detonate(); //this may be replaced later with a virtual which just creates the explosion object and calls the sound effects, etc...
-                                     //sincei t probably doesn't need to be different for most projectiles
+                                     //since it probably doesn't need to be different for most projectiles
     public abstract void OnCollisionEnter(Collision c);
 }
